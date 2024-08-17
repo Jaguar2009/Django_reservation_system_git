@@ -1,10 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block title %}
+Головна
+{% endblock %}
+
+{% block body %}
+
+<h2>Кімната №-{{room_detail.number}}</h2>
+<h3>Оцінка {{room_detail.rating}}</h3>
+<h2> {{room_detail.description}}</h2>
+
+<p>
+    <h3>Максимальна кількість людей - {{room_detail.capacity}}</h3>
+    <h4>UAH {{room_detail.price}}</h4>
+
+</p>
+
+{% endblock %}
