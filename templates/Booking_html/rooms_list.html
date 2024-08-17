@@ -6,8 +6,8 @@
 
 {% block body %}
 
-  {% for room in rooms_list %}
 
+{% for room in rooms_list %}
     <div class="container mt-4">
     <div class="row">
         <div class="col-md-4 mb-4">
@@ -24,13 +24,12 @@
                     <p class="card-text">
                         Від <strong>UAH {{room.price}}</strong><br>
                     </p>
-                    <a href="" class="btn btn-primary">Детальніше</a>
+                    <a href="{% url 'room_details' room.id %}" class="btn btn-primary">Детальніше</a>
                 </div>
             </div>
         </div>
     </div>
     </div>
-
-  {% endfor %}
+{% endfor %}
 
 {% endblock %}
