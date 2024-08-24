@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if message %}
+        {{ message }}
+    {% else %}
+        Чіт коди
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1 class="text-center">Чіт коди</h1>
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="cheat_code" class="form-label">Введіть чіт код</label>
+                <input type="text" class="form-control" id="cheat_code" name="cheat_code" placeholder="Введіть чіт код">
+            </div>
+            <button type="submit" class="btn btn-warning">Перевірити</button>
+        </form>
+    </div>
+{% endblock %}
+
+{% block extra_css %}
+    <style>
+        body {
+            background: url('https://i.gifer.com/1j64.gif') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+        }
+        .container {
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .form-control {
+            background-color: #333;
+            border: 1px solid #555;
+            color: #fff;
+        }
+    </style>
+{% endblock %}
+
