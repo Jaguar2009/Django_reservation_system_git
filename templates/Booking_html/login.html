@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Логін
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h2>Логін</h2>
+
+        <!-- Відображення повідомлень про помилки -->
+        {% if messages %}
+            <div class="alert alert-danger">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- Відображення форми входу -->
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}  <!-- Використання {{ form.as_p }} для відображення форми -->
+            <button type="submit" class="btn btn-primary">Увійти</button>
+        </form>
+    </div>
+{% endblock %}

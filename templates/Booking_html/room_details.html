@@ -1,20 +1,46 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Головна
+Кімната №-{{ room.number }} - Деталі
 {% endblock %}
 
 {% block body %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="img-container d-flex justify-content-center align-items-center" style="height: 300px; overflow: hidden;">
+                {% if room.image %}
+                    <img src="{{ room.image.url }}" alt="Room Image" style="height: 250px; object-fit: cover;">
+                {% else %}
+                    <img src="https://via.placeholder.com/250" alt="Default Image" style="height: 250px; object-fit: cover;">
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <h2>Кімната №-{{ room.number }}</h2>
+            <p><strong>Опис:</strong> {{ room.description }}</p>
+            <p><strong>Ціна:</strong> UAH {{ room.price }}</p>
+            <p><strong>Максимальна кількість людей:</strong> {{ room.capacity }}</p>
+        </div>
+        {% if room.status == 'unavailable' %}
+            <p class="text-danger">Ця кімната тимчасово не доступна для бронювання.</p>
+        {% else %}
+            {% if user.is_authenticated %}
+                {% if room.status == 'available' or room.status == 'booked' %}
+                    <a href="{% url 'book_room' room.id %}" class="btn btn-primary">Забронювати</a>
+                {% endif %}
 
-<h2>Кімната №-{{room_detail.number}}</h2>
-<h3>Оцінка {{room_detail.rating}}</h3>
-<h2> {{room_detail.description}}</h2>
-
-<p>
-    <h3>Максимальна кількість людей - {{room_detail.capacity}}</h3>
-    <h4>UAH {{room_detail.price}}</h4>
-
-</p>
-
-
+                {% if room.status == 'booked' %}
+                    <p>Статус: {{ room.get_status_display }}</p>
+                    {% for booking in room.bookings.all %}
+                        <p>Час початку: {{ booking.start_date }}</p>
+                        <p>Час закінчення: {{ booking.end_date }}</p>
+                    {% endfor %}
+                {% endif %}
+            {% else %}
+                <p>Щоб забронювати кімнату, будь ласка, <a href="{% url 'login' %}">увійдіть</a> або <a href="{% url 'register' %}">зареєструйтесь</a>.</p>
+            {% endif %}
+        {% endif %}
+    </div>
+</div>
 {% endblock %}
