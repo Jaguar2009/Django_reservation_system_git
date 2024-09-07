@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block title %}
+{{ hotel.title }} - Кімнати
+{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h2>{{ hotel.title }}</h2>
+    <p>{{ hotel.description }}</p>
+    <span class="badge bg-primary">Рейтинг: {{ hotel.rating }}</span>
+
+    <div class="row mt-4 mb-4">
+        <form class="d-flex flex-wrap" method="GET" action="{% url 'hotel_rooms_list_details' hotel.id %}">
+            <input type="search" name="q" class="form-control me-2" placeholder="Пошук за назвою" aria-label="Search">
+            <input type="number" name="price_from" class="form-control me-2" placeholder="Ціна від" min="0" step="0.01">
+            <input type="number" name="price_to" class="form-control me-2" placeholder="Ціна до" min="0" step="0.01">
+            <input type="number" name="capacity_from" class="form-control me-2" placeholder="Макс. кількість від" min="1">
+            <input type="number" name="capacity_to" class="form-control me-2" placeholder="Макс. кількість до" min="1">
+
+            <button type="submit" class="btn btn-primary">Застосувати фільтри</button>
+        </form>
+    </div>
+
+    <div class="row mt-4">
+        {% for room in rooms %}
+            <div class="container mt-4">
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <div class="card" style="width: 100%;">
+                            <div class="img-container d-flex justify-content-center align-items-center" style="height: 200px; overflow: hidden;">
+                                {% if room.image %}
+                                    <img src="{{ room.image.url }}" alt="Room Image" style="height: 250px; object-fit: cover;">
+                                {% else %}
+                                    <img src="https://via.placeholder.com/250" alt="Default Image" style="height: 250px; object-fit: cover;">
+                                {% endif %}
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">Кімната №-{{ room.number }}</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">Максимальна кількість людей: {{ room.capacity }}</h6>
+                                <div class="mb-2">
+                                    <span class="badge bg-primary">{{ room.get_status_display }}</span>
+                                </div>
+                                <p class="card-text">Ціна: UAH {{ room.price }}</p>
+                                <a href="{% url 'room_details' room.id %}" class="btn btn-primary">Детальніше</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+        <p>У цього готелю немає доступних кімнат.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
