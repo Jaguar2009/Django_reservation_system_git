@@ -1,10 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+<style>
+  .text-custom {
+    color: var(--custom-text-color, #000); /* Колір тексту за замовчуванням чорний */
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Отримання кольору тексту з сесії
+    const customTextColor = '{{ request.session.custom_text_color|default:"#000" }}';
+
+    // Застосування кольору до всіх елементів з класом text-custom
+    document.querySelectorAll('.text-custom').forEach(element => {
+      element.style.color = customTextColor;
+    });
+  });
+</script>

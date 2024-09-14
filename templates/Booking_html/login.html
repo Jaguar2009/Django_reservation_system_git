@@ -5,12 +5,14 @@
 {% endblock %}
 
 {% block body %}
-    <div class="container">
-        <h2>Логін</h2>
+<main class="d-flex justify-content-center align-items-center vh-100 text-custom">
+    <form method="POST" class="text-center" style="width: 100%; max-width: 330px;">
+        {% csrf_token %}
+        <h1 class="h3 mb-3 fw-normal">Логін</h1>
 
         <!-- Відображення повідомлень про помилки -->
         {% if messages %}
-            <div class="alert alert-danger">
+            <div class="alert alert-danger mt-3">
                 {% for message in messages %}
                     <p>{{ message }}</p>
                 {% endfor %}
@@ -18,10 +20,10 @@
         {% endif %}
 
         <!-- Відображення форми входу -->
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}  <!-- Використання {{ form.as_p }} для відображення форми -->
-            <button type="submit" class="btn btn-primary">Увійти</button>
-        </form>
-    </div>
+        {{ form.as_p }}
+
+        <button type="submit" class="btn btn-primary w-100 py-2 mt-3">Увійти</button>
+
+    </form>
+</main>
 {% endblock %}

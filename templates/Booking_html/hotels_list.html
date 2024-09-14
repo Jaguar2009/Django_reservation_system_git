@@ -5,12 +5,13 @@
 {% endblock %}
 
 {% block body %}
-<div class="container mt-4">
-    <h2>Наші готелі</h2>
+
+<div class="container mt-4 text-custom">
+    <h2>Готелі</h2>
 
     <div class="row mt-4">
         {% for hotel in hotels_list %}
-            <div class="container mt-4">
+            <div class="container mt-4 text-custom">
                 <div class="row">
                     <div class="col-md-4 mb-4">
                         <div class="card" style="width: 100%;">
@@ -21,10 +22,10 @@
                                     <img src="https://via.placeholder.com/250" alt="Default Image" style="height: 250px; object-fit: cover;">
                                 {% endif %}
                             </div>
-                            <div class="card-body">
+                            <div class="card-body text-custom">
                                 <h5 class="card-title">{{ hotel.title }}</h5>
-                                <h6 class="card-subtitle mb-2 text-muted">Оцінка: {{ hotel.rating }}</h6>
-                                <p class="card-text">{{ hotel.description }}</p>
+                                <span class="badge bg-primary">Рейтинг: {{ hotel.rating }}</span>
+                                <p class="card-text">{{ hotel.location }}</p>
                                 <a href="{% url 'hotel_rooms_list_details' hotel.id %}" class="btn btn-primary">Переглянути кімнати</a>
                             </div>
                         </div>

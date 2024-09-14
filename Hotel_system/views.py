@@ -7,6 +7,9 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import authenticate, login as auth_login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+import secrets
+from django.core.mail import send_mail
+from django.conf import settings
 
 
 class BookingForm(forms.ModelForm):
@@ -106,27 +109,71 @@ def book_room(request, room_id):
     if request.method == 'POST':
         form = BookingForm(request.POST)
         if form.is_valid():
-            booking = form.save(commit=False)
-            booking.user = request.user
-            booking.room = room
+            request.session['booking_data'] = {
+                'start_date': form.cleaned_data['start_date'].isoformat(),
+                'end_date': form.cleaned_data['end_date'].isoformat(),
+                'room_id': room_id
+            }
 
-            overlapping_bookings = Booking.objects.filter(
-                room=room,
-                start_date__lt=booking.end_date,
-                end_date__gt=booking.start_date
+            code = secrets.token_hex(4)
+            request.session['verification_code'] = code
+
+            send_mail(
+                'Верифікація бронювання',
+                f'Ваш код для підтвердження бронювання: {code}',
+                settings.DEFAULT_FROM_EMAIL,
+                [request.user.email],
+                fail_silently=False,
             )
 
-            if overlapping_bookings.exists():
-                form.add_error(None, "Ця кімната вже заброньована на зазначений період.")
-            else:
-                room.status = 'booked'
-                room.save()
-                booking.save()
-                return redirect('my_bookings')
+            return redirect('verify_booking')
+
     else:
         form = BookingForm()
 
     return render(request, 'Booking_html/booking_form.html', {'form': form, 'room': room})
+
+
+@login_required
+def verify_booking(request):
+    if request.method == 'POST':
+        input_code = request.POST.get('verification_code')
+        stored_code = request.session.get('verification_code')
+
+        if input_code == stored_code:
+            booking_data = request.session.get('booking_data')
+            room = Room.objects.get(id=booking_data['room_id'])
+
+            overlapping_bookings = Booking.objects.filter(
+                room=room,
+                start_date__lt=booking_data['end_date'],
+                end_date__gt=booking_data['start_date']
+            )
+
+            if overlapping_bookings.exists():
+                return render(request, 'Booking_html/verify_booking.html',
+                              {'error': 'Ця кімната вже заброньована на зазначений період.'})
+            else:
+                booking = Booking(
+                    user=request.user,
+                    room=room,
+                    start_date=booking_data['start_date'],
+                    end_date=booking_data['end_date'],
+                    is_verified=True
+                )
+                booking.save()
+
+                room.status = 'booked'
+                room.save()
+
+                del request.session['booking_data']
+                del request.session['verification_code']
+
+                return redirect('my_bookings')
+        else:
+            return render(request, 'Booking_html/verify_booking.html', {'error': 'Неправильний код верифікації.'})
+
+    return render(request, 'Booking_html/verify_booking.html')
 
 
 @login_required
@@ -179,6 +226,31 @@ def activate_cheat_code(request, cheat_code, background_url, redirect_url):
         return redirect(redirect_url)
 
 
+def is_valid_rgb(rgb_code):
+    parts = rgb_code.split(',')
+    if len(parts) != 3:
+        return False
+    try:
+        r, g, b = map(int, parts)
+        return all(0 <= x <= 255 for x in [r, g, b])
+    except ValueError:
+        return False
+
+
+def apply_text_color_cheat_code(request, rgb_code):
+    try:
+        r, g, b = map(int, rgb_code.split(','))
+        if all(0 <= x <= 255 for x in [r, g, b]):
+            color = f'rgb({r},{g},{b})'
+            request.session['custom_text_color'] = color
+        else:
+            request.session['custom_text_color'] = '#000'
+    except ValueError:
+        request.session['custom_text_color'] = '#000'
+
+    return redirect('hotel_list')
+
+
 def cheat_codes(request):
     if request.GET.get('access_granted') != 'true':
         return redirect('hotel_list')
@@ -220,8 +292,13 @@ def cheat_codes(request):
                 'https://ti-ukraine.org/wp-content/uploads/2021/07/maldivy.png',
                 'hotel_list'
             )
-    return render(request,
-                  'Booking_html/cheat_codes.html')
+
+        # New cheat code for changing text color
+        if cheat_code.startswith('text/colour/'):
+            rgb_code = cheat_code[len('text/colour/'):]
+            return apply_text_color_cheat_code(request, rgb_code)
+
+    return render(request, 'Booking_html/cheat_codes.html')
 
 
 def register(request):

@@ -5,33 +5,34 @@
 {% endblock %}
 
 {% block body %}
-<div class="container mt-4">
+
+<div class="container mt-4 text-custom">
     <h2>Результати пошуку</h2>
 
     <div class="row mt-4">
         {% if hotels %}
-                {% for hotel in hotels %}
-                <div class="container mt-4">
-                    <div class="row">
-                        <div class="col-md-4 mb-4">
-                            <div class="card" style="width: 100%;">
-                                <div class="img-container d-flex justify-content-center align-items-center" style="height: 200px; overflow: hidden;">
-                                    {% if hotel.image %}
-                                        <img src="{{ hotel.image.url }}" alt="Image" style="height: 250px; object-fit: cover;">
-                                    {% else %}
-                                        <img src="https://via.placeholder.com/250" alt="Default Image" style="height: 250px; object-fit: cover;">
-                                    {% endif %}
-                                </div>
-                                <div class="card-body">
-                                    <h5 class="card-title">{{ hotel.title }}</h5>
-                                    <h6 class="card-subtitle mb-2 text-muted">Оцінка: {{ hotel.rating }}</h6>
-                                    <p class="card-text">{{ hotel.description }}</p>
-                                    <a href="{% url 'hotel_rooms_list_details' hotel.id %}" class="btn btn-primary">Переглянути кімнати</a>
-                                </div>
+            {% for hotel in hotels %}
+            <div class="container mt-4 text-custom">
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <div class="card" style="width: 100%;">
+                            <div class="img-container d-flex justify-content-center align-items-center" style="height: 200px; overflow: hidden;">
+                                {% if hotel.image %}
+                                    <img src="{{ hotel.image.url }}" alt="Image" style="height: 250px; object-fit: cover;">
+                                {% else %}
+                                    <img src="https://via.placeholder.com/250" alt="Default Image" style="height: 250px; object-fit: cover;">
+                                {% endif %}
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">{{ hotel.title }}</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">Оцінка: {{ hotel.rating }}</h6>
+                                <p class="card-text">{{ hotel.location }}</p>
+                                <a href="{% url 'hotel_rooms_list_details' hotel.id %}" class="btn btn-primary">Переглянути кімнати</a>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
             {% endfor %}
         {% else %}
             <p>Не знайдено жодного готелю за вказаними параметрами.</p>
