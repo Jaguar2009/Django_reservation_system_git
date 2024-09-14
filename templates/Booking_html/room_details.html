@@ -5,7 +5,8 @@
 {% endblock %}
 
 {% block body %}
-<div class="container mt-4">
+
+<div class="container mt-4 text-custom">
     <div class="row">
         <div class="col-md-6">
             <div class="img-container d-flex justify-content-center align-items-center" style="height: 300px; overflow: hidden;">
@@ -38,7 +39,7 @@
                     {% endfor %}
                 {% endif %}
             {% else %}
-                <p>Щоб забронювати кімнату, будь ласка, <a href="{% url 'login' %}">увійдіть</a> або <a href="{% url 'register' %}">зареєструйтесь</a>.</p>
+                <p>Щоб забронювати кімнату, будь ласка, <a href="{% url 'login' %}" class="text-primary">увійдіть</a> або <a href="{% url 'register' %}" class="text-primary">зареєструйтесь</a>.</p>
             {% endif %}
         {% endif %}
     </div>

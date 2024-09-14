@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}Верифікація{% endblock %}
+
+{% block body %}
+
+<main class="d-flex justify-content-center align-items-center vh-100 text-custom">
+  <form method="POST" class="text-center" style="width: 100%; max-width: 330px;">
+    {% csrf_token %}
+    <h1 class="h3 mb-3 fw-normal">Введіть код верифікації</h1>
+
+    <div class="form-floating mb-3">
+      <input type="text" class="form-control" id="floatingVerificationCode" name="verification_code" placeholder="Код верифікації" required>
+      <label for="floatingVerificationCode">Код верифікації</label>
+    </div>
+
+    <button class="btn btn-primary w-100 py-2" type="submit">Підтвердити</button>
+
+    {% if error %}
+      <div class="alert alert-danger mt-3">{{ error }}</div>
+    {% endif %}
+  </form>
+</main>
+{% endblock %}

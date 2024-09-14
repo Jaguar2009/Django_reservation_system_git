@@ -1,11 +1,14 @@
 from django.db import models
 from django.contrib.auth.models import User
+import secrets
+import hashlib
 
 
 class Hotel(models.Model):
     title = models.CharField(max_length=100)
     description = models.TextField()
     rating = models.DecimalField(max_digits=5, decimal_places=1)
+    location = models.CharField(max_length=1000)
     image = models.ImageField(upload_to='hotel_images/', blank=True, null=True)
 
     def __str__(self):
@@ -47,6 +50,8 @@ class Booking(models.Model):
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     creation_date = models.DateTimeField(auto_now_add=True)
+    verification_code = models.CharField(max_length=64, blank=True, null=True)
+    is_verified = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = "Booking"
@@ -55,4 +60,10 @@ class Booking(models.Model):
 
     def __str__(self):
         return f'{self.user} - {self.room}'
+
+    def generate_verification_code(self):
+        code = secrets.token_hex(4)
+        self.verification_code = hashlib.sha256(code.encode()).hexdigest()
+        self.save()
+        return code
 

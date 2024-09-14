@@ -1,21 +1,24 @@
 {% extends 'base.html' %}
+
 {% block title %}Бронювання кімнати{% endblock %}
 
 {% block body %}
-<h1>Бронювання кімнати {{ room.number }}</h1>
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Підтвердити бронювання</button>
-</form>
+<div class="container mt-5 text-custom">
+    <h1>Бронювання кімнати: {{ room.number }}</h1>
 
-{% if form.non_field_errors %}
-    <div class="alert alert-danger">
-        {% for error in form.non_field_errors %}
-            <p>{{ error }}</p>
-        {% endfor %}
-    </div>
-{% endif %}
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Підтвердити бронювання</button>
+    </form>
 
+    {% if form.non_field_errors %}
+        <div class="alert alert-danger">
+            {% for error in form.non_field_errors %}
+                <p>{{ error }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
 {% endblock %}

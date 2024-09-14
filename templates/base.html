@@ -29,7 +29,9 @@
 
                 <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                     <li><a href="/home" class="nav-link px-2 text-secondary">Головна</a></li>
-                    <li><a href="/home/my_bookings/" class="nav-link px-2 text-white">Мої бронювання</a></li>
+                    {% if user.is_authenticated %}
+                        <li><a href="/home/my_bookings/" class="nav-link px-2 text-white">Мої бронювання</a></li>
+                    {% endif %}
                     <li><a href="/home/about/" id="about_link" class="nav-link px-2 text-white">Про нас</a></li>
                 </ul>
 
@@ -43,8 +45,8 @@
                 </form>
 
                 <div class="text-end">
-                    <a href="{% url 'login' %}" class="btn btn-outline-light me-2">Login</a>
-                    <a href="{% url 'register' %}" class="btn btn-warning">Sign-up</a>
+                    <a href="{% url 'login' %}" class="btn btn-outline-light me-2">Логін</a>
+                    <a href="{% url 'register' %}" class="btn btn-warning">Регестрація</a>
                 </div>
                 <div class="text-end">
                     {% if user.is_authenticated %}
@@ -58,7 +60,11 @@
         </div>
     </header>
 
-    {% block body %}{% endblock %}
+    {% include 'custom_text_color.html' %}
+    <div class="container">
+        {% block body %}
+        {% endblock %}
+    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -83,5 +89,18 @@
             });
         });
     </script>
+<footer class="py-3 my-4">
+    <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+        <li class="nav-item"><a href="/home" class="nav-link px-2 text-body-secondary">Головна</a></li>
+        {% if user.is_authenticated %}
+            <li class="nav-item"><a href="/home/my_bookings/" class="nav-link px-2 text-body-secondary">Бронювання</a></li>
+        {% endif %}
+        <li class="nav-item"><a href="/home/about/" class="nav-link px-2 text-body-secondary">Про нас</a></li>
+        <li class="nav-item"><a href="/home/profile/" class="nav-link px-2 text-body-secondary">Профіль</a></li>
+        <li class="nav-item"><a href="{% url 'login' %}" class="nav-link px-2 text-body-secondary">Логін</a></li>
+        <li class="nav-item"><a href="{% url 'register' %}" class="nav-link px-2 text-body-secondary">Регистрація</a></li>
+    </ul>
+    <p class="text-center text-body-secondary">© 2024 B.E.S.T. Innovations</p>
+</footer>
 </body>
 </html>

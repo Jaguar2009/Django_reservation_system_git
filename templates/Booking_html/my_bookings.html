@@ -1,24 +1,27 @@
 {% extends 'base.html' %}
+
 {% block title %}Бронювання{% endblock %}
-{% block body%}
-<h1>Мої бронювання</h1>
 
-{% if bookings %}
-    <ul>
-    {% for booking in bookings %}
-        <li class="card mb-3">
-            <div class="card-body">
-                <strong>{{ booking.room.name }}</strong> в готелі: {{ booking.room.hotel.title }}<br>
-                Час початку: {{ booking.start_date }}<br>
-                Час закінчення: {{ booking.end_date }}<br>
-                <a href="{% url 'cancel_booking' booking.id %}" class="btn btn-danger">Відмінити бронювання</a>
-            </div>
-        </li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>У вас немає бронювань.</p>
-{% endif %}
+{% block body %}
 
+<div class="container text-custom">
+    <h1>Мої бронювання</h1>
+
+    {% if bookings %}
+        <ul>
+        {% for booking in bookings %}
+            <li class="card mb-3">
+                <div class="card-body">
+                    <strong>{{ booking.room.name }}</strong> в готелі: {{ booking.room.hotel.title }}<br>
+                    Час початку: {{ booking.start_date }}<br>
+                    Час закінчення: {{ booking.end_date }}<br>
+                    <a href="{% url 'cancel_booking' booking.id %}" class="btn btn-danger">Відмінити бронювання</a>
+                </div>
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>У вас немає бронювань.</p>
+    {% endif %}
+</div>
 {% endblock %}
-
